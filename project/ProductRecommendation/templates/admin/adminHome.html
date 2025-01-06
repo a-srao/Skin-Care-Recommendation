@@ -1,0 +1,157 @@
+{% extends 'admin/adminNavigation.html' %}
+{% block content %}
+{% load static %}
+
+<button onclick="addProduct();">
+  <div class="floating-container">
+    <div class="floating-button">+</div>
+  </div>
+</button>
+
+
+<div class="container-fluid" style="margin-top: 0px">
+  <div class="row">
+    {% for product in products %}
+    
+    {% if product.quantity != 0 %}
+    <div class="col-md-3 mb-3">
+      <div class="card h-100">
+        <img src="{{ product.image.url }}" class="card-img-top" alt="product" height="250px" width="100px" />
+        <div class="d-flex align-items-center" style="position: absolute; color: red; background-color: white; ">
+          <b>Stock Left: {{product.quantity}}</b></div>
+        <div class="card-body">
+          <div class="d-flex">
+            <h5 class="card-title">{{ product.name }}</h5>
+          </div>
+          <h5 class="card-text">{{ product.manufacturer }}</h5>
+          <h5 class="card-text">Rs.{{ product.price }}.00</h5>
+          <div class="description-container">
+            <p class="card-text description">
+              {{ product.description|truncatewords:30 }}
+            </p>
+            <!-- <a href="/orderNow/0"><button class="btn btn-primary float-right btn-md">Buy Now</button></a> -->
+            {% if product.description|wordcount > 30 %}
+            <p class="read-more">
+              <a href="#" class="toggle-description">Read More</a>
+
+            </p>
+            <p class="full-description">{{ product.description }}</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+{% endfor %}
+  </div>
+</div>
+
+<style>
+  .description-container .full-description {
+    display: none;
+  }
+
+  .description-container.show-full-description .full-description {
+    display: block;
+  }
+</style>
+
+<script>
+  // Add JavaScript to toggle visibility
+  document.addEventListener("DOMContentLoaded", function () {
+    var toggleButtons = document.querySelectorAll('.toggle-description');
+
+    toggleButtons.forEach(function (button) {
+      button.addEventListener('click', function (event) {
+        event.preventDefault();
+        var descriptionContainer = this.closest('.description-container');
+        var fullDescription = descriptionContainer.querySelector('.full-description');
+        descriptionContainer.classList.toggle('show-full-description');
+        button.textContent = descriptionContainer.classList.contains('show-full-description') ? 'Read Less' : 'Read More';
+      });
+    });
+  });
+</script>
+
+<!-- Modal -->
+<div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form action="/addProduct/" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title text-primary" id="heading">Add Product Details</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-bs-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <!-- Input Text Field -->
+          <div class="form-group">
+            <label for="textInput">Product Name</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="Enter Product name" required>
+          </div>
+
+          <!-- Input Text Field -->
+          <div class="form-group">
+            <label for="textInput">Product Manufacturer</label>
+            <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="Enter Manufacturer" required>
+          </div>
+
+          <div class="form-group">
+            <label for="textInput">Product Quantity</label>
+            <input type="number" class="form-control" id="qty" name="qty" placeholder="Enter quantity" required>
+          </div>
+
+          <div class="form-group">
+            <label for="quantitySelect">Skin Type</label>
+            <select class="form-control" id="category" name="category" required>
+                <option value="" selected disabled>Select Type</option>
+                <option value="1">Dry Skin</option>
+                <option value="2">Oily Skin</option>
+                <option value="3">Combination</option>
+            </select>
+        </div>
+        
+
+          <!-- Input Text Field -->
+          <div class="form-group">
+            <label for="textInput">Product Price</label>
+            <input type="number" class="form-control" id="price" name="price" placeholder="Enter price" required>
+          </div>
+
+          <!-- Textarea Field -->
+          <div class="form-group">
+            <label for="textareaField">Description:</label>
+            <textarea class="form-control" id="description" placeholder="Description" name="description"
+              rows="3" required></textarea>
+          </div>
+
+          <!-- Textarea Field -->
+          <div class="form-group">
+            <label for="textareaField">Recommendation:</label>
+            <textarea class="form-control" id="recommendation" placeholder="Recommendation" name="recommendation"
+              rows="3" required></textarea>
+          </div>
+
+          <!-- File Field -->
+          <div class="form-group">
+            <label for="fileField">Image</label>
+            <input type="file" class="form-control py-2 rounded-0" id="images" name="images" placeholder="Image"
+              accept=".png,.jpg,.jpeg,.webp" required>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,170 @@
+{% extends 'user/userNavigation.html' %} {% block content %} {% load static %}
+
+<div class="container-fluid" style="margin-top: 10px">
+  <div class="row">
+    {% for product in products %}
+    
+    {% if product.quantity != 0 %}
+    <div class="col-md-3 mb-3">
+      <div class="card h-100">
+        <img src="{{ product.image.url }}" class="card-img-top" alt="product" height="250px" width="100px" />
+        <div class="d-flex align-items-center" style="position: absolute; color: red; background-color: white; ">
+          <b>Stock Left: {{product.quantity}}</b></div>
+        <div class="card-body">
+          <div class="d-flex">
+            <h5 class="card-title">{{ product.name }}</h5>
+          </div>
+          <h5 class="card-text">{{ product.manufacturer }}</h5>
+          <h5 class="card-text">Rs.{{ product.price }}.00</h5>
+          <div class="description-container">
+            <p class="card-text description">
+              {{ product.description|truncatewords:30 }}
+            </p>
+            <button class="btn btn-primary float-right btn-md"  onclick="orderNow('{{ product.id }}');">Buy Now</button>
+            {% if product.description|wordcount > 30 %}
+            <p class="read-more">
+              <a href="#" class="toggle-description">Read More</a>
+
+            </p>
+            <p class="full-description">{{ product.description }}</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+{% endfor %}
+  </div>
+</div>
+
+<div class="modal fade" id="orderProduct" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form action="/orderProduct/" method="post" id="orderNow">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title text-primary" id="heading">Order Product</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-bs-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <input type="text" class="form-control" id="id" value="" name="id" hidden>
+            <input type="text" class="form-control" id="price" value="" name="price" hidden>
+          
+          <!-- Input Text Field -->
+          <div class="form-group">
+            <label for="textInput">Food Quantity</label>
+              <div class="row">
+                  <div class="col-2">
+                      <button type="button" class=" btn btn-secondary decrease-btn"
+                          id="decrease-btn"
+                          onclick="decreaseQuantity();">-</button>
+                  </div>
+                  <div class="col-8">
+                      <input type="text" class="form-control text-center quantity"
+                          id="quantity"
+                          name="quantity" value="1" placeholder="Quantity">
+
+                  </div>
+                  <div class="col-2">
+                      <button type="button" class=" btn btn-secondary increase-btn"
+                          id="increase-btn"
+                          onclick="increaseQuantity();">+</button>
+                  </div>
+              </div>
+            </div>
+          <!-- Textarea Field -->
+          <div class="form-group">
+            <label for="textareaField">Total:</label>
+            <input class="form-control" id="total" placeholder="total" name="total" readonly/>
+          </div>
+          <div class="form-group">
+            <label for="textareaField">Address:</label>
+            <textarea class="form-control" id="address" placeholder="Address" name="address" rows="3" required></textarea>
+          </div>
+          <!-- Textarea Field -->
+          <div class="form-group">
+            <label for="textareaField">Description:</label>
+            <textarea class="form-control" id="description" placeholder="Description" name="description" rows="3" required></textarea>
+          </div>
+          <div class="error text-danger font-weight-bold text-center"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Order Now</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  let quantityInput = document.getElementById('quantity');
+  let totalAmount = document.getElementById('total');
+  let priceInput = document.getElementById('price'); // Get the price input element
+
+  function increaseQuantity() {
+    let currentQuantity = parseInt(quantityInput.value);
+    currentQuantity++;
+    quantityInput.value = currentQuantity;
+    updatePrice();
+  }
+
+  function decreaseQuantity() {
+    let currentQuantity = parseInt(quantityInput.value);
+    if (currentQuantity > 1) {
+      currentQuantity--;
+      quantityInput.value = currentQuantity;
+      updatePrice();
+    }
+  }
+
+  function updatePrice() {
+    let currentQuantity = parseInt(quantityInput.value);
+    let amount = parseFloat(priceInput.value); // Get the value of the price input
+    console.log("Price:", priceInput.value);
+    console.log("Quantity:", currentQuantity);
+    console.log("Amount:", amount);
+    totalAmount.value = (amount * currentQuantity).toFixed(2); // Set the value of the total input
+}
+
+  
+  // Call updatePrice() initially to set the total value
+  updatePrice();
+</script>
+
+
+<!-- Rest of your HTML -->
+
+
+<style>
+  .description-container .full-description {
+    display: none;
+  }
+
+  .description-container.show-full-description .full-description {
+    display: block;
+  }
+</style>
+
+<script>
+  // Add JavaScript to toggle visibility
+  document.addEventListener("DOMContentLoaded", function () {
+    var toggleButtons = document.querySelectorAll('.toggle-description');
+
+    toggleButtons.forEach(function (button) {
+      button.addEventListener('click', function (event) {
+        event.preventDefault();
+        var descriptionContainer = this.closest('.description-container');
+        var fullDescription = descriptionContainer.querySelector('.full-description');
+        descriptionContainer.classList.toggle('show-full-description');
+        button.textContent = descriptionContainer.classList.contains('show-full-description') ? 'Read Less' : 'Read More';
+      });
+    });
+  });
+</script>
+
+
+{% endblock content %}

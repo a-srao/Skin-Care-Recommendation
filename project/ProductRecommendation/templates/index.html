@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Product Recommendation </title>
+
+    {% load static%}
+
+    <link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet" type="text/css">
+
+
+    {% block jquery %}
+
+    <script type="text/javascript" src="{% static "js/jquery.min.js" %}"> </script>
+    <script type="text/javascript" src="{% static "js/popper.min.js" %}"> </script>
+
+    <script type="text/javascript" src="{% static "js/bootstrap.min.js" %}"></script>
+
+    {% endblock %}
+
+
+
+</head>
+
+
+<body style="background-image: url({% static "images/skin_image1.jpg" %});background-repeat: no-repeat;background-size: cover;">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-primary">
+        <a class="navbar-brand text-white" href="#"><b>Product Recommendation </b></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item mr-5">
+                    <a class="nav-link btn btn-white btn-sm text-white" href="/adminLogin/"><h5>Admin</h5></a>
+                </li>
+                <li class="nav-item mr-5">
+                    <a class="nav-link btn btn-white btn-sm text-white" href="/user/"><h5>User</h5></a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container-fluid" style="margin-top: 10px">
+        <div class="row">
+          {% for product in products %}
+          
+          {% if product.quantity != 0 %}
+          <div class="col-md-3 mb-3">
+            <div class="card h-100">
+              <img src="{{ product.image.url }}" class="card-img-top" alt="product" height="250px" width="100px" />
+              <div class="d-flex align-items-center" style="position: absolute; color: red; background-color: white; ">
+                <b>Stock Left: {{product.quantity}}</b></div>
+              <div class="card-body">
+                <div class="d-flex">
+                  <h4 class="card-title">{{ product.name }}</h4>
+                </div>
+                <h5 class="card-text">{{ product.manufacturer }}</h5>
+                <h5 class="card-text">Rs.{{ product.price }}.00</h5>
+                <div class="description-container">
+                  <p class="card-text description">
+                    {{ product.description|truncatewords:30 }}
+                  </p>
+                  <a href="/orderNow/0"><button class="btn btn-primary float-right btn-md">Buy Now</button></a>
+                  {% if product.description|wordcount > 30 %}
+                  <p class="read-more">
+                    <a href="#" class="toggle-description">Read More</a>
+      
+                  </p>
+                  <p class="full-description">{{ product.description }}</p>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+      {% endfor %}
+        </div>
+      </div>
+      
+      <style>
+        .description-container .full-description {
+          display: none;
+        }
+      
+        .description-container.show-full-description .full-description {
+          display: block;
+        }
+      </style>
+      
+      <script>
+        // Add JavaScript to toggle visibility
+        document.addEventListener("DOMContentLoaded", function () {
+          var toggleButtons = document.querySelectorAll('.toggle-description');
+      
+          toggleButtons.forEach(function (button) {
+            button.addEventListener('click', function (event) {
+              event.preventDefault();
+              var descriptionContainer = this.closest('.description-container');
+              var fullDescription = descriptionContainer.querySelector('.full-description');
+              descriptionContainer.classList.toggle('show-full-description');
+              button.textContent = descriptionContainer.classList.contains('show-full-description') ? 'Read Less' : 'Read More';
+            });
+          });
+        });
+      </script>
+
+</body>
+
+</html>

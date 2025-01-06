@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Product Recommendation </title>
+    {% load static %}
+
+    <link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet" type="text/css">
+    <link href="{% static "css/floatingBtn.css" %}" rel="stylesheet" type="text/css">
+    <!-- <link href="{% static "css/custom.css" %}" rel="stylesheet" type="text/css"> -->
+
+    {% block jquery %}
+
+    <script type="text/javascript" src="{% static "js/jquery.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/popper.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/ajax.js" %}"></script>
+
+    <script type="text/javascript" src="{% static "js/bootstrap.min.js" %}"></script>
+    <!-- <script type="text/javascript" src="{% static "js/jquery.autocomplete.min.js" %}"></script> -->
+
+    <!-- <script type="text/javascript" src="{% static "js/products.js" %}"></script> -->
+
+    {% endblock %}
+</head>
+<body style="background-image: url({% static "images/skin_image1.jpg" %});background-repeat: no-repeat;background-size: cover;">
+    
+    <nav class="navbar navbar-expand-lg navbar-light bg-primary">
+        <a class="navbar-brand text-white" href="#"><b>Product Recommendation </b></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mx-5 ml-auto">
+                <li class="nav-item active mx-3">
+                    <a class="nav-link text-white" href="/home/"><b>Home</b> <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item mx-3">
+                    <a class="nav-link text-white" href="/view/"><b>Products</b></a>
+                </li>
+                <li class="nav-item mx-3">
+                  <a class="nav-link text-white" href="/orders/"><b>Orders</b></a>
+                </li>
+                <li class="nav-item mx-3">
+                    <a class="nav-link text-white ml-auto" href="/logout/"><b>Logout</b></a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    {% if success %}
+<div class="d-flex justify-content-center my-2">
+    <div class="alert alert-success alert-dismissible fade show text-center w-75" id="msg" role="alert">
+      <strong>{{ success }}!</strong>
+    </div>
+  </div>
+{% endif %}
+    {% if error %}
+<div class="d-flex justify-content-center my-2">
+    <div class="alert alert-danger alert-dismissible fade show text-center w-75" id="msg" role="alert">
+      <strong>{{ error }}!</strong>
+    </div>
+  </div>
+{% endif %}
+<script>
+    setTimeout(function(){
+      if($('#msg'). length > 0){
+      $('#msg').remove();
+    }
+    }, 2000)
+  </script>
+
+{% block content %}
+
+{% endblock %}
+</body>
+
+</html>

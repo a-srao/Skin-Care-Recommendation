@@ -1,0 +1,52 @@
+
+{% extends 'admin/adminNavigation.html' %}
+{% block content %}
+{% load static %}
+<div style="margin-top: 10px; margin-bottom: 10px;">
+     
+    <div class="container-fluid">
+        <div class="my-3">
+            <h3 style="color: rgb(77, 19, 236);">Buy History</h3>
+        </div>
+        <table class="table table-border table-bordered text-center shadow h-100vh bg-white" style="border-radius: 20px;">
+            <thead>
+                <th>#</th>
+                <th>Image</th>
+                <th>Product Name</th>
+                <th>User Name</th>
+                <th>Contact</th>
+                <th>Address</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr class="text-center">
+                    <td>{{ forloop.counter }}</td>
+                    <td><img src="{{ product.product.image.url }}" alt="product_image" height="100px" width="100px" style="border-radius: 20%; border-color: blue;"></td>
+                    <td class="text-nowrap  ">{{ product.product.name|wordwrap:10|linebreaksbr }}</td>
+                    <td class="text-nowrap   ">{{ product.user.name|wordwrap:10|linebreaksbr }}</td>
+                    <td class="text-nowrap text-center  ">{{product.user.contact}}</td>
+                    <td class="text-nowrap text-center  ">{{product.address}}</td>
+                    <td class="text-nowrap text-center  ">{{product.quantity}}</td>
+                    <td class="text-nowrap text-center  ">{{product.price}}</td>
+                    <td class="text-nowrap text-center  ">{{product.total}}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td> <h2 class="text-danger">No data found...!</h2></td>
+                <td></td>
+                <td></td>
+                  <td></td>
+                </tr>
+                {% endfor%}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock content %}

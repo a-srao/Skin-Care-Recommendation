@@ -1,0 +1,40 @@
+{% extends 'user/userNavigation.html' %}
+{% block content %}
+{% load static %}
+
+<body style="background-image: url({% static "images/skin_image.jpg" %});background-repeat: no-repeat;background-size: cover;">
+    <br>
+    <div class="container">
+        <div class="row" style="margin-left: 300px; margin-top: 150px;">
+            <div class="col-md-8">
+                <div class="card" style="border-radius: 35px; background-image: linear-gradient(to bottom, #1303fe, #005cff, #0084ff, #00a4ff, #00bff9, #00c1fb, #00c3fd, #00c5ff, #00aeff, #0091ff, #3e68ff, #9b09f5);">
+                    <div class="card-header">
+                        <h3 class="text-center text-white">
+                            Upload an image
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="formAddCollege" action="/testimage/" enctype='multipart/form-data' 
+                        method="post" onsubmit="return validateUser()">
+                            {% csrf_token %}
+
+                            <label for="testimage" class="form-group">Select Image</label>
+                            <input type="file" name="test1" id="test" class="form-group form-control" required>
+
+
+                            <div class="form-group text-center ">
+                                <button type="submit" class="btn btn-success form-control form-group w-50" id="btbaddFarmer" >
+                                    Submit
+                                </button>
+                            </div>
+                           
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+{%endblock%}

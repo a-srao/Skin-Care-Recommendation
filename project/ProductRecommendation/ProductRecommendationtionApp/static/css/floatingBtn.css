@@ -1,0 +1,21 @@
+
+.floating-container {
+    position: fixed;
+    bottom: 20px; /* Adjust the bottom position as needed */
+    right: 20px; /* Adjust the right position as needed */
+    z-index: 999; /* Ensure the button is on top of other elements */
+  }
+  
+  .floating-button {
+    width: 70px;
+    height: 70px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 65px;
+    font-size: 34px;
+    cursor: pointer;
+    /* Add any additional styling you desire */
+  }
+  

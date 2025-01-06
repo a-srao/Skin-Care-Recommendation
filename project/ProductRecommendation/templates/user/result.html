@@ -1,0 +1,148 @@
+<!-- <!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.10.0/css/mdb.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <style>
+        .card {
+            transform: translate(-50%);
+            margin-left: 50%;
+            margin-top: 15%;
+            width: 1100px;
+        }
+    </style>
+</head> -->
+{% extends 'user/userNavigation.html' %}
+{% block content %}
+{% load static %}
+
+
+<body style="background-image: url({% static "images/2.jpg" %});background-repeat: no-repeat;background-size: cover;">
+
+    <div class="container my-5">
+        <div class="card hoverable p-4" style="border-radius: 35px; background-image: linear-gradient(to bottom, #1303fe, #005cff, #0084ff, #00a4ff, #00bff9, #00c1fb, #00c3fd, #00c5ff, #00aeff, #0091ff, #3e68ff, #9b09f5);">
+            <div class="d-flex justify-content-center">
+                <span class="badge badge-success w-50">
+                    <h1>RESULT</h1>
+                </span>
+            </div>
+            <div class="card-body text-center">
+                <img src="../media/uploaded_image/input.png" alt="product_image" height="150px" width="150px" style="border-radius: 20%; border-color: blue;">
+                <h3 class="mt-3 text-white">{{result}}</h3>
+                
+        </div>
+        <form>
+        <div class="row text-center" style="margin-left: 860px;">
+            <button class="btn btn-large btn-warning mt-1" formaction="/testagain/" 
+            style="font-size: large;">
+                Check another result</button></div>
+    </form>
+    </div>
+    <div class="container-fluid my-3">
+        <div class="row">
+            {% for product in products %}
+            
+            {% if product.quantity != 0 %}
+            <div class="col-md-3 mb-3">
+              <div class="card h-100">
+                <img src="{{ product.image.url }}" class="card-img-top" alt="product" height="250px" width="100px" />
+                <!-- <div class="d-flex align-items-center" style="position: absolute; color: red; background-color: white; "><b>Stock Left: {{product.quantity}}</b></div> -->
+                <div class="card-body">
+                  <div class="d-flex text-center">
+                    <h5 class="card-title ">{{ product.name }}</h5>
+                  </div>
+              <button class="btn btn-primary float-right btn-md"  onclick="orderNow('{{ product.id }}');">Buy Now</button>
+
+                  <!-- <h5 class="card-text">{{ product.manufacturer }}</h5>
+                  <h5 class="card-text">Rs.{{ product.price }}.00</h5>
+                  <div class="description-container">
+                    <p class="card-text description">
+                      {{ product.description|truncatewords:30 }}
+                    </p>
+                    <a href="#"><button class="btn btn-primary float-right btn-md">Buy Now</button></a>
+                    {% if product.description|wordcount > 30 %}
+                    <p class="read-more">
+                      <a href="#" class="toggle-description">Read More</a>
+        
+                    </p>
+                    <p class="full-description">{{ product.description }}</p>
+                    {% endif %}
+                  </div> -->
+                </div>
+              </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+          </div>
+    </div>
+
+    <div class="modal fade" id="orderProduct" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form action="/orderProduct/" method="post" id="orderNow">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title text-primary" id="heading">Order Product</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-bs-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <input type="text" class="form-control" id="id" value="" name="id" hidden>
+            <input type="text" class="form-control" id="price" value="" name="price" hidden>
+          
+          <!-- Input Text Field -->
+          <div class="form-group">
+            <label for="textInput">Food Quantity</label>
+              <div class="row">
+                  <div class="col-2">
+                      <button type="button" class=" btn btn-secondary decrease-btn"
+                          id="decrease-btn"
+                          onclick="decreaseQuantity();">-</button>
+                  </div>
+                  <div class="col-8">
+                      <input type="text" class="form-control text-center quantity"
+                          id="quantity"
+                          name="quantity" value="1" placeholder="Quantity">
+
+                  </div>
+                  <div class="col-2">
+                      <button type="button" class=" btn btn-secondary increase-btn"
+                          id="increase-btn"
+                          onclick="increaseQuantity();">+</button>
+                  </div>
+              </div>
+            </div>
+          <!-- Textarea Field -->
+          <div class="form-group">
+            <label for="textareaField">Total:</label>
+            <input class="form-control" id="total" placeholder="total" name="total" readonly/>
+          </div>
+          <div class="form-group">
+            <label for="textareaField">Address:</label>
+            <textarea class="form-control" id="address" placeholder="Address" name="address" rows="3" required></textarea>
+          </div>
+          <!-- Textarea Field -->
+          <div class="form-group">
+            <label for="textareaField">Description:</label>
+            <textarea class="form-control" id="description" placeholder="Description" name="description" rows="3" required></textarea>
+          </div>
+          <div class="error text-danger font-weight-bold text-center"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Order Now</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+</body>
+
+{% endblock %}

@@ -1,0 +1,151 @@
+
+
+{% extends 'admin/adminNavigation.html' %}
+{% block content %}
+{% load static %}
+
+<div style="margin-top: 10px; margin-bottom: 10px;">
+     
+    <div class="container-fluid">
+        <div class="my-3">
+            <h3 style="color: rgb(77, 19, 236);">Product Details View</h3>
+        </div>
+        <table class="table table-border table-bordered text-center shadow h-100vh bg-white" style="border-radius: 20px;">
+            <thead>
+                <th>#</th>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Manufacturer</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Description</th>
+                <th>Recommendation</th>
+                <th>Status</th>
+                <th>Action</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr class="text-center">
+                    <td>{{ forloop.counter }}</td>
+                    <td><img src="{{ product.image.url }}" alt="product_image" height="100px" width="100px" style="border-radius: 20%; border-color: blue;"></td>
+                    <td class="text-nowrap  ">{{ product.name|wordwrap:10|linebreaksbr }}</td>
+                    <td class="text-nowrap   ">{{ product.manufacturer|wordwrap:10|linebreaksbr }}</td>
+                    <td class="text-nowrap text-center  ">{{product.quantity}}</td>
+                    <td class="text-nowrap text-center  ">{{product.price}}</td>
+                    <td class="text-nowrap">{{ product.description|wordwrap:20|linebreaksbr }}</td>
+                    <td class="text-nowrap">{{ product.recommendation|wordwrap:20|linebreaksbr }}</td>
+
+                   
+                    {% if product.is_enabled == 0 %}
+                    <td class="text-danger text-nowrap"><b>Inactive</b></td>
+                    <td><a href="/changeStatus/{{product.id}}/1" class="btn btn-success btn-sm">Activate</a></td>
+                    <td><a class="btn btn-secondary btn-sm disabled">Edit</a></td>
+                    <td><a class="btn btn-secondary btn-sm disabled">Delete</a></td>
+                    {% else %}
+                    <td class="text-success text-nowrap"><b>Active</b></td>
+                    <td><a href="/changeStatus/{{product.id}}/0" class="btn btn-danger btn-sm">Deactivate</a></td>
+                    <td><button class="btn btn-warning btn-sm" onclick="editProduct('{{product.id}}')">Edit</button></td>
+                    <td><a href="/delete/{{product.id}}" class="btn btn-danger btn-sm">Delete</a></td>
+                    {% endif %}
+                </tr>
+                {% empty %}
+                <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td> <h2 class="text-danger">No data found...!</h2></td>
+                  <td></td>
+                </tr>
+                {% endfor%}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form action="/updateProduct/" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title text-primary" id="heading">Add Product Details</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-bs-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <!-- Input Text Field -->
+          <div class="form-group">
+            <label for="textInput">Product Name</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="Enter Product name" required>
+          </div>
+          <input type="text" class="form-control" id="id" name="id" required hidden>
+
+          <!-- Input Text Field -->
+          <div class="form-group">
+            <label for="textInput">Product Manufacturer</label>
+            <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="Enter Manufacturer" required>
+          </div>
+
+          <div class="form-group">
+            <label for="textInput">Product Quantity</label>
+            <input type="number" class="form-control" id="qty" name="qty" placeholder="Enter quantity" required>
+          </div>
+
+          <div class="form-group">
+            <label for="quantitySelect">Skin Type</label>
+            <select class="form-control" id="category" name="category" required>
+                <option value="" selected disabled>Select Type</option>
+                <option value="1">Dry Skin</option>
+                <option value="2">Oily Skin</option>
+                <option value="3">Combination</option>
+            </select>
+        </div>
+        
+
+          <!-- Input Text Field -->
+          <div class="form-group">
+            <label for="textInput">Product Price</label>
+            <input type="number" class="form-control" id="price" name="price" placeholder="Enter price" required>
+          </div>
+
+          <!-- Textarea Field -->
+          <div class="form-group">
+            <label for="textareaField">Description:</label>
+            <textarea class="form-control" id="description" placeholder="Description" name="description"
+              rows="3" required></textarea>
+          </div>
+
+          <!-- Textarea Field -->
+          <div class="form-group">
+            <label for="textareaField">Recommendation:</label>
+            <textarea class="form-control" id="recommendation" placeholder="Recommendation" name="recommendation"
+              rows="3" required></textarea>
+          </div>
+
+          <!-- File Field -->
+          <div class="form-group">
+            <label for="fileField">Image</label>
+            <input type="file" class="form-control py-2 rounded-0" id="images" name="images" placeholder="Image"
+              accept=".png,.jpg,.jpeg,.webp" required>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+{% endblock content %}
